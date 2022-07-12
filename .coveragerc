@@ -1,0 +1,4 @@
+[run]
+omit =
+    leds_cibele_api/config/gunicorn.py
+    leds_cibele_api/__main__.py
