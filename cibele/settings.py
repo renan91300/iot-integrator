@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-vru%a!#h)tgbgggbx6joxy#@j2@$b**2in+(4_!2ne0b=c)b8$'
+SECRET_KEY = "django-insecure-vru%a!#h)tgbgggbx6joxy#@j2@$b**2in+(4_!2ne0b=c)b8$"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -35,62 +35,63 @@ AUTH_USER_MODEL = "accounts.UserAccount"
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     "rest_framework",
-    'djoser',
-    'drf_yasg',
-    'api',
-    'accounts',
+    "djoser",
+    "drf_yasg",
+    "api",
+    "accounts",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
-ROOT_URLCONF = 'cibele.urls'
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = ("http://localhost:5173",)
+ROOT_URLCONF = "cibele.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'cibele.wsgi.application'
+WSGI_APPLICATION = "cibele.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'cibele',
-        'HOST': 'localhost',
-        'CLIENT': {
-            "host": "localhost",
-            "port": 27017
-        }
+    "default": {
+        "ENGINE": "djongo",
+        "NAME": "cibele",
+        "HOST": "localhost",
+        "CLIENT": {"host": "localhost", "port": 27017},
     }
 }
 
@@ -107,16 +108,16 @@ EMAIL_USE_TLS = True
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -124,9 +125,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'pt-BR'
+LANGUAGE_CODE = "pt-BR"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -159,32 +160,32 @@ DJOSER = {
     "USER_CREATE_PASSWORD_RETYPE": True,
     "USERNAME_CHANGED_EMAIL_CONFIRMATION": False,
     "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
-    "SEND_CONFIRMATION_EMAIL": True,
+    "SEND_CONFIRMATION_EMAIL": False,
     "SET_PASSWORD_RETYPE": True,
     "LOGOUT_ON_PASSWORD_CHANGE": True,
     "PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND": False,
     "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
     "USERNAME_RESET_CONFIRM_URL": "email/reset/confirm/{uid}/{token}",
     "ACTIVATION_URL": "activate/{uid}/{token}",
-    "SEND_ACTIVATION_EMAIL": True,
+    "SEND_ACTIVATION_EMAIL": False,
     "SERIALIZERS": {
         "user_create": "accounts.serializers.UserCreateSerializer",
         "user_create_password_retype": "accounts.serializers.UserCreatePasswordRetypeSerializer",
         "user": "accounts.serializers.UserSerializer",
-        "user_delete": "accounts.serializers.UserDelete",
+        "user_delete": "accounts.serializers.UserDeleteSerializer",
         "current_user": "accounts.serializers.UserSerializer",
     },
-    #"EMAIL": {
+    # "EMAIL": {
     #    "activation": "api.views.email.ActivationEmail",
     #    "confirmation": "api.views.email.ConfirmationEmail",
     #    "password_reset": "api.views.email.PasswordResetEmail",
     #    "password_changed_confirmation": "api.views.email.PasswordChangedConfirmationEmail",
     #    "username_changed_confirmation": "api.views.email.UsernameChangedConfirmationEmail",
     #    "username_reset": "api.views.email.UsernameResetEmail",
-    #},
+    # },
 }
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,

@@ -11,10 +11,12 @@ from django.db import transaction
 
 User = get_user_model()
 
+
 class UserCreateSerializer(BaseUserRegistrationSerializer):
     class Meta(BaseUserRegistrationSerializer.Meta):
         model = User
         fields = "__all__"
+
 
 class UserCreatePasswordRetypeSerializer(UserCreatePasswordRetypeSerializer):
     class Meta(BaseUserRegistrationSerializer.Meta):
@@ -28,10 +30,26 @@ class UserCreatePasswordRetypeSerializer(UserCreatePasswordRetypeSerializer):
             user.save(update_fields=["is_active"])
         return user
 
+
 class UserSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         model = User
-        fields = ("id", "name", "email", "is_staff", "is_active", "created_at", "updated_at", "last_login")
-    
+        fields = (
+            "id",
+            "name",
+            "email",
+            "is_staff",
+            "is_active",
+            "created_at",
+            "updated_at",
+            "last_login",
+        )
+
     def update(self, instance, validated_data):
         return super().update(instance, validated_data)
+
+
+class UserDeleteSerializer(UserSerializer):
+    class Meta:
+        model = User
+        fields = ()
