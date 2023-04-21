@@ -3,13 +3,13 @@ from django.conf.urls import include
 
 from rest_framework.routers import DefaultRouter
 from accounts.views import UserViewSet
-from api.views import department, location, employee, device, log
+from api.views import department, location, academic, device, log
 
 router = DefaultRouter()
 router.register("auth/users", UserViewSet)
 router.register("department", department.DepartmentViewSet)
 router.register("location", location.LocationViewSet)
-router.register("employee", employee.EmployeeViewSet)
+router.register("academic", academic.AcademicViewSet)
 router.register("device", device.DeviceViewSet)
 router.register("log", log.LogViewSet)
 
