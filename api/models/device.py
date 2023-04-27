@@ -2,6 +2,7 @@ from djongo import models
 from api.models.base import BaseModel
 from api.models.location import LocationModel
 from api.models.academic import AcademicModel
+from api.models.category import Category
 
 
 class DeviceModel(BaseModel):
@@ -14,3 +15,4 @@ class DeviceModel(BaseModel):
     academics = models.ManyToManyField(
         AcademicModel, blank=True, help_text="Membros com permissões de acesso"
     )
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
