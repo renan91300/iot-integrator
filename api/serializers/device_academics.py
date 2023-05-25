@@ -1,24 +1,14 @@
 from rest_framework import serializers
-from api.serializers.device import DeviceSerializer
-from api.serializers.academic import AcademicSerializer
 
-from api.models.device_academics import DeviceAcademicsModel, AccessPeriodModel, TimeIntervalModel
+from api.models.device_academics import DeviceAcademicsModel
 
-class TimeIntervalSerializer(serializers.ModelSerializer):
+class TimeIntervalSerializer(serializers.Serializer):
     start = serializers.CharField(max_length=5)
     end = serializers.CharField(max_length=5)
 
-    class Meta:
-        model = TimeIntervalModel
-        fields = "__all__"
-
-class AccessPeriodSerializer(serializers.ModelSerializer):
+class AccessPeriodSerializer(serializers.Serializer):
     day_of_week = serializers.IntegerField()
     time_intervals = TimeIntervalSerializer(many=True)
-
-    class Meta:
-        model = AccessPeriodModel   
-        fields = "__all__"
 
 class DeviceAcademicsSerializer(serializers.ModelSerializer):
     access_period = AccessPeriodSerializer(many=True)
