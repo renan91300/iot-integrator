@@ -13,6 +13,6 @@ class DeviceModel(BaseModel):
     # indicando se a fechadura está aberta ou fechada nos dispositivos
     # específicos para essa finalidade
     academics = models.ManyToManyField(
-        AcademicModel, blank=True, help_text="Membros com permissões de acesso"
+        AcademicModel, through="DeviceAcademicsModel", blank=True, help_text="Membros com permissões de acesso"
     )
     category = models.ForeignKey(Category, on_delete=models.PROTECT)

@@ -1,11 +1,17 @@
+from django.db import IntegrityError, transaction
+import traceback
+from rest_framework.exceptions import ValidationError
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from api.models.device import DeviceModel
+from api.models.device_academics import DeviceAcademicsModel
 from api.serializers.device import DeviceSerializer
+from api.serializers.device_academics import DeviceAcademicsSerializer
 
 import pika
+import json
 
 
 class RabbitConnection:
@@ -28,10 +34,36 @@ class DeviceViewSet(viewsets.ModelViewSet):
     queryset = DeviceModel.objects.all()
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        data = request.data
+        academics_data = data.pop("academics", [])
+        try:
+            with transaction.atomic():
+                serializer = self.get_serializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                device_instance = serializer.save()
 
-        RabbitConnection().send_message("hello", "Hello Workd")
+                academics_data = [academic|{"device": device_instance.id} for academic in academics_data]
+                device_academics_serializer = DeviceAcademicsSerializer(data=academics_data, many=True)
+                try:
+                    device_academics_serializer.is_valid(raise_exception=True)
+                    device_academics_instances = device_academics_serializer.save()
+                except ValidationError as exc:
+                        errors = exc.get_full_details()
+                        self.perform_destroy(device_instance)
+                        raise ValidationError(errors)
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+                rabbit_allowed_tags = [
+                    {
+                        "hash": instance.academic.key,
+                        "access_period": instance.access_period
+                    } 
+                    for instance in device_academics_instances
+                ]
+                
+                rabbit_topic_data = {"settings": device_instance.settings, "allowed_tags": rabbit_allowed_tags}
+
+                RabbitConnection().send_message(device_instance.name, json.dumps(rabbit_topic_data))
+
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except IntegrityError as e:
+            return Response({"erro": str(e)}, status=status.HTTP_400_BAD_REQUEST)
