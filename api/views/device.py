@@ -6,8 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from api.models.device import DeviceModel
-from api.models.device_academics import DeviceAcademicsModel
-from api.serializers.device import DeviceSerializer
+from api.serializers.device import DeviceSerializer, DeviceDetailsSerializer
 from api.serializers.device_academics import DeviceAcademicsSerializer
 
 import pika
@@ -31,9 +30,13 @@ class RabbitConnection:
 
 class DeviceViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = DeviceSerializer
     queryset = DeviceModel.objects.all()
 
+    def get_serializer_class(self, *args, **kwargs):
+        if self.action in ["retrieve"]:
+            return DeviceDetailsSerializer
+        return DeviceSerializer
+    
     def create(self, request, *args, **kwargs):
         data = request.data
         academics_data = data.pop("academics", [])
