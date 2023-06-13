@@ -11,3 +11,15 @@
         - password: "#superuser9130"
 
         Com esse usuário você poderá logar no sistema e criar outros usuários
+
+
+# Como executar o worker do celery para escutar o tópico de logs:
+
+ - No windows
+    ```bash
+        python -m celery -A cibele worker --pool=solo -l info
+    ```
+ - No linux
+    ```bash
+        python -m celery -A cibele worker -l info
+    ```
