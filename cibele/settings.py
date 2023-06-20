@@ -200,3 +200,11 @@ SWAGGER_SETTINGS = {
         }
     },
 }
+
+
+BROKER_URL = 'amqp://guest:guest@localhost:15672//'
+CELERY_RESULT_BACKEND = 'mongodb'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+RUN_RABBITMQ_LISTENER = True
