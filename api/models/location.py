@@ -13,3 +13,7 @@ class LocationModel(BaseModel):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name="Localização"
+        verbose_name_plural="Localizações"

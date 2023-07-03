@@ -17,3 +17,10 @@ class AcademicModel(BaseModel):
         verbose_name="Departamento/Coordenadoria",
     )
     key = models.CharField(max_length=16, help_text="Hash identificador do funcionário")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Acadêmico"
+        verbose_name_plural = "Acadêmicos"
