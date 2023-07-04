@@ -1,4 +1,4 @@
-from djongo import models
+from django.db import models
 from api.models.base import BaseModel
 from api.models.device import DeviceModel
 from api.models.academic import AcademicModel

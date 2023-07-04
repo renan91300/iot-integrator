@@ -1,4 +1,4 @@
-from djongo import models
+from django.db import models
 from api.models.base import BaseModel
 
 
@@ -13,7 +13,7 @@ class LocationModel(BaseModel):
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
-        verbose_name="Localização"
-        verbose_name_plural="Localizações"
+        verbose_name = "Localização"
+        verbose_name_plural = "Localizações"
