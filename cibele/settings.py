@@ -88,12 +88,15 @@ WSGI_APPLICATION = "cibele.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "djongo",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": "cibele",
+        "USER": "renan",
+        "PASSWORD": "12345",
         "HOST": "localhost",
-        "CLIENT": {"host": "localhost", "port": 27017},
+        "PORT": "5432",
     }
 }
+
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
@@ -137,6 +140,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+FAVICON_PATH = ""
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
@@ -202,9 +206,8 @@ SWAGGER_SETTINGS = {
 }
 
 
-BROKER_URL = 'amqp://guest:guest@localhost:15672//'
-CELERY_RESULT_BACKEND = 'mongodb'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
+BROKER_URL = "amqp://guest:guest@localhost:15672//"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TASK_SERIALIZER = "json"
 RUN_RABBITMQ_LISTENER = True
