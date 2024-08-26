@@ -89,7 +89,7 @@ WSGI_APPLICATION = "cibele.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "cibele",
+        "NAME": "tcc",
         "USER": "renan",
         "PASSWORD": "12345",
         "HOST": "localhost",

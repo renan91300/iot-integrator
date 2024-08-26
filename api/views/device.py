@@ -9,21 +9,17 @@ from api.models.device import DeviceModel
 from api.serializers.device import DeviceSerializer, DeviceDetailsSerializer
 from api.serializers.device_academics import DeviceAcademicsSerializer
 
-import pika
+import paho.mqtt.publish as publish
 import json
 
 
-class RabbitConnection:
+class MqttConnection:
     def send_message(self, topic, message):
-        connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
-        channel = connection.channel()
-
-        channel.queue_delete(queue=topic)
-        channel.queue_declare(queue=topic)
-
-        channel.basic_publish(exchange="", routing_key=topic, body=message)
-
-        connection.close()
+        try:
+            publish.single(topic, message, hostname="localhost", port=1883, auth={"username": "renan", "password": "12345"})
+        except Exception as e:
+            print(f"Error: {e}")
+            return False
 
         return True
 
@@ -66,7 +62,7 @@ class DeviceViewSet(viewsets.ModelViewSet):
                 
                 rabbit_topic_data = {"settings": device_instance.settings, "allowed_tags": rabbit_allowed_tags}
 
-                RabbitConnection().send_message(device_instance.name, json.dumps(rabbit_topic_data))
+                MqttConnection().send_message(device_instance.name, json.dumps(rabbit_topic_data))
 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         except IntegrityError as e:
@@ -102,6 +98,6 @@ class DeviceViewSet(viewsets.ModelViewSet):
 
         rabbit_topic_data = {"settings": data["settings"], "allowed_tags": rabbit_allowed_tags}
 
-        RabbitConnection().send_message(data["name"], json.dumps(rabbit_topic_data))
+        MqttConnection().send_message(data["name"], json.dumps(rabbit_topic_data))
 
         return Response("ok")
