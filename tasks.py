@@ -1,5 +1,4 @@
 import json
-import pika
 import logging
 from api.serializers.log import LogSerializer
 
@@ -25,13 +24,21 @@ def listen_mqtt_topic():
         serializer.save()
         logging.info("Log salvo: {}".format(data))
 
-    mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+    mqttc = mqtt.Client(
+        mqtt.CallbackAPIVersion.VERSION2, 
+        client_id="dashboard_cibele",
+        protocol=mqtt.MQTTv5
+    )
     mqttc.on_connect = on_connect
     mqttc.on_message = on_message
 
     # connect with username and password
     mqttc.username_pw_set("renan", "12345")
-    mqttc.connect("localhost", 1883, 60)
+    mqttc.connect(
+        host="localhost", 
+        port=1883, 
+        keepalive=60, 
+        clean_start=False)
 
     # Blocking call that processes network traffic, dispatches callbacks and
     # handles reconnecting.
