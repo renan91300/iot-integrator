@@ -66,18 +66,6 @@
         }
     },
     {
-        "model": "api.AcademicModel",
-        "pk": 1,
-        "fields": {
-            "created_at": "2023-04-26T22:12:00+00:00",
-            "updated_at": "2023-04-26T22:12:00+00:00",
-            "name": "João Antônio da Silva",
-            "registration": "20211si005",
-            "department": 1,
-            "key": "99a29dc8105fd2fa"
-        }
-    },
-    {
         "model": "api.DeviceModel",
         "pk": 1,
         "fields": {
@@ -85,8 +73,33 @@
             "updated_at": "2023-04-26T22:12:00+00:00",
             "name": "Device1",
             "location": 1,
-            "settings": {},
-            "category": 2
+            "category": 2,
+            "status": {
+                "field_name": "Estado",
+                "field_type": "switch",
+                "field_value": "Desligado",
+                "possible_values": ["Ligado", "Desligado"],
+                "last_update": "2023-04-26T22:12:00+00:00"
+            },
+            "config": {
+            
+            },
+            "received_data_config": [
+                {
+                    "name": "Temperatura",
+                    "field_type": "number",
+                    "visual_type": "chart",
+                    "format": "Celsius",
+                    "topic": "device/1/data/temperature"
+                },
+                {
+                    "name": "Umidade",
+                    "field_type": "number",
+                    "visual_type": "gauge",
+                    "format": "%",
+                    "topic": "device/1/data/humidity"
+                }
+            ]
         }
     }
 ]
