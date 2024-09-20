@@ -211,3 +211,6 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
 RUN_RABBITMQ_LISTENER = True
+
+DEFAULT_FROM_EMAIL = "renangomespoggian@gmail.com"
+FRONTEND_URL="http://localhost:3000/"

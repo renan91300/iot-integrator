@@ -1,5 +1,8 @@
 import json
 import logging
+
+from django.core.mail import send_mail
+from django.conf import settings
 from api.serializers.log import LogSerializer
 
 from celery import shared_task
@@ -19,9 +22,9 @@ def listen_mqtt_topic():
         # Converte a string para um dicionário
         data = json.loads(msg.payload)
         
-        serializer = LogSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        # serializer = LogSerializer(data=data)
+        # serializer.is_valid(raise_exception=True)
+        # serializer.save()
         logging.info("Log salvo: {}".format(data))
 
     mqttc = mqtt.Client(
@@ -47,3 +50,16 @@ def listen_mqtt_topic():
     logging.info('Iniciando a escuta do MQTT...')
     mqttc.loop_forever()
 
+@shared_task
+def send_invitation_email(email, token, is_project_invitation=False):
+    invite_url = f"{settings.FRONTEND_URL}/register/{token}/"
+    if is_project_invitation:
+        subject = "Você foi convidado para um projeto!"
+        message = f"Olá, você foi convidado para um projeto. Para aceitar o convite, acesse {invite_url}"
+    else:
+        subject = "Você foi convidado para nossa plataforma!"
+        message = f"Olá, você foi convidado para a nossa plataforma. Para se cadastrar, acesse {invite_url}"
+    
+    logging.info(f"Enviando email para {email}")
+    logging.info(f"From: {settings.DEFAULT_FROM_EMAIL}")
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
