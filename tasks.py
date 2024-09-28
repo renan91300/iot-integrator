@@ -1,7 +1,7 @@
 import json
 import logging
 
-from django.core.mail import send_mail
+from templated_mail.mail import BaseEmailMessage
 from django.conf import settings
 from api.serializers.log import LogSerializer
 
@@ -53,13 +53,7 @@ def listen_mqtt_topic():
 @shared_task
 def send_invitation_email(email, token, is_project_invitation=False):
     invite_url = f"{settings.FRONTEND_URL}/register/{token}/"
-    if is_project_invitation:
-        subject = "Você foi convidado para um projeto!"
-        message = f"Olá, você foi convidado para um projeto. Para aceitar o convite, acesse {invite_url}"
-    else:
-        subject = "Você foi convidado para nossa plataforma!"
-        message = f"Olá, você foi convidado para a nossa plataforma. Para se cadastrar, acesse {invite_url}"
-    
-    logging.info(f"Enviando email para {email}")
-    logging.info(f"From: {settings.DEFAULT_FROM_EMAIL}")
-    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+    BaseEmailMessage(
+        template_name="email/invitation_template.html",
+        context={"is_project_invitation": is_project_invitation, "invite_url": invite_url}
+    ).send(to=[email])

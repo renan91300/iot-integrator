@@ -1,0 +1,27 @@
+{% load i18n %}
+
+{% block subject %}
+{% if is_project_invitation %}
+{% blocktrans %}
+Você foi convidado para participar de um projeto
+{% endblocktrans %}
+{% else %}
+{% blocktrans %}
+Você foi convidado para a nossa plataforma
+{% endblocktrans %}
+{% endif %}
+{% endblock subject %}
+
+{% block text_body %}
+
+{% blocktrans %}
+Você está recebendo este email por ter recebido um convite para a plataforma Cibele.
+{% endblocktrans %}
+
+{% trans "Por favor, vá até a seguinte página e realize o cadastro: " %}
+{{ invite_url}}
+
+{% trans "Atenciosamente, " %}
+
+{% blocktrans %}Equipe Cibele{% endblocktrans %}
+{% endblock text_body %}

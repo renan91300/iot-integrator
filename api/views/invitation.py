@@ -12,12 +12,11 @@ from tasks import send_invitation_email
 class InvitationViewSet(viewsets.GenericViewSet):
     serializer_class = InvitationSerializer
     queryset = Invitation.objects.all()
-    permission_classes = [IsAuthenticated]
 
-    def get_permissions(self):
-        if self.action in ['accept']:
+    def get_permissions_classes(self):
+        if self.action == 'accept':
             return [AllowAny]
-        return super().get_permissions()
+        return [IsAuthenticated]
 
     def create(self, request):
         data = request.data
@@ -35,14 +34,15 @@ class InvitationViewSet(viewsets.GenericViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
-    @action(detail=True, methods=['post'])
-    def accept(self, request, token):        
+    @action(detail=False, methods=['post'])
+    def accept(self, request):
+        token = request.data.get("token")        
         # check if the invitation exists
-        invitation = get_object_or_404(Invitation, token=token, accept=False)
+        invitation = get_object_or_404(Invitation, token=token, accepted=False)
 
         # if the user has already an account, the invitation is accept and return success
         # if the user don't have an account, the user is redirect to register page
-        if get_user_model().objects.get(email=invitation.email):
+        if get_user_model().objects.filter(email=invitation.email).first():
             invitation.accepted = True
             invitation.save()
             return Response(status=status.HTTP_200_OK)
