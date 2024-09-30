@@ -1,12 +1,13 @@
 from django.db import IntegrityError, transaction
 from django.shortcuts import get_object_or_404
-from rest_framework.exceptions import ValidationError
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+import celery
 
 from api.models.device import DeviceModel
 from api.serializers.device import DeviceSerializer
+from mqtt_listener import mqtt_listener
 
 import paho.mqtt.publish as publish
 import json
@@ -39,6 +40,8 @@ class DeviceViewSet(viewsets.ModelViewSet):
                 mqtt_message = json.dumps({"status": device_instance.status, "configs": device_instance.config})                
                 
                 MqttConnection().send_message(mqtt_config_topic, mqtt_message)
+
+                mqtt_listener.subscribe_to_devices()
 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         except IntegrityError as e:

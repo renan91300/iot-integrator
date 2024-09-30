@@ -210,6 +210,8 @@ BROKER_URL = "amqp://guest:guest@localhost:15672//"
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
+# rabbit as result backend
+CELERY_RESULT_BACKEND = "rpc://"
 RUN_RABBITMQ_LISTENER = True
 
 DEFAULT_FROM_EMAIL = "renangomespoggian@gmail.com"
