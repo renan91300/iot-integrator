@@ -10,6 +10,7 @@ from django.contrib.auth.models import Group
 from django.db import transaction
 
 from api.models.invitation import Invitation
+from api.models.project import Project
 
 User = get_user_model()
 
@@ -39,6 +40,12 @@ class UserCreatePasswordRetypeSerializer(UserCreatePasswordRetypeSerializer):
             user = User.objects.create_user(**validated_data)
             user.is_active = True
             user.save(update_fields=["is_active"])
+
+            if invitation.project:
+                project = Project.objects.filter(id=invitation.project.id).first()
+                project.members.add(user)
+                project.save()
+                
         return user
 
 

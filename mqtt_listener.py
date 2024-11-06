@@ -1,8 +1,13 @@
+from datetime import datetime
 import json
 import logging
 import threading
 import paho.mqtt.client as mqtt
 from api.models.device import DeviceModel
+from pymongo import MongoClient
+
+uri = "mongodb://localhost:27017/"
+mongoClient = MongoClient(uri)
 
 # display logging on console
 logging.basicConfig(level=logging.INFO)
@@ -10,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 class MqttListener(threading.Thread):
     def __init__(self):
         super().__init__()
-        self.client = mqtt.Client()
+        self.client = mqtt.Client(clean_session=False, client_id="dashboard_listener")
         self.client.on_message = self.on_message
         self.running = True
 
@@ -20,10 +25,28 @@ class MqttListener(threading.Thread):
 
     def on_message(self, client, userdata, msg):
         data = json.loads(msg.payload)
-        logging.info(f"Mensagem recebida no tópico {msg.topic}: {data}")
+        topic = msg.topic
+        logging.info(f"ID do dispositivo: {topic.split('/')[1]}")
+        logging.info(f"Mensagem recebida no tópico {topic}: {data}")
+
+        device = msg.topic.split('/')[1]
+        
+        try:
+            database = mongoClient.get_database("tcc")
+            collection = database.get_collection("received_data")
+
+            collection.insert_one({
+                "created_at": datetime.now(),
+                "device": device,
+                "topic": topic,
+                "data": data
+            })
+        except Exception as e:
+            logging.error(f"Erro ao inserir no banco de dados: {e}")
+            
 
     def subscribe_to_devices(self):
-        self.client.subscribe("device_logs")
+        self.client.subscribe("device/+/config")
         devices = DeviceModel.objects.all()
         for device in devices:
             for config in device.received_data_config:

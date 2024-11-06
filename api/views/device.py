@@ -28,8 +28,22 @@ class DeviceViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = DeviceModel.objects.all()
     serializer_class = DeviceSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(project__owner=self.request.user.id)
+        project = self.request.GET.get("project")
+        if project:
+            queryset = queryset.filter(project=project)
+
+        return queryset
     
     def create(self, request, *args, **kwargs):
+        project = request.GET.get("project")
+        if not project:
+            return Response("É necessário informar o projeto")
+        data = request.data
+        data["project"] = project
+
         try:
             with transaction.atomic():
                 serializer = self.get_serializer(data=request.data)

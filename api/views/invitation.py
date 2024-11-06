@@ -23,10 +23,12 @@ class InvitationViewSet(viewsets.GenericViewSet):
         kwargs['context'] = self.get_serializer_context()
         return self.serializer_class(*args, **kwargs)
 
-    def get_permissions_classes(self):
+    def get_permissions(self):
         if self.action == 'accept':
-            return [AllowAny]
-        return [IsAuthenticated]
+            self.permission_classes = [AllowAny]
+        else:
+            self.permission_classes = [IsAuthenticated]
+        return super().get_permissions()
 
     def create(self, request):
         data = request.data
@@ -49,7 +51,6 @@ class InvitationViewSet(viewsets.GenericViewSet):
         token = request.data.get("token")        
         # check if the invitation exists
         invitation = get_object_or_404(Invitation, token=token, accepted=False)
-
         # if the user has already an account, the invitation is accept and return success
         # if the user don't have an account, the user is redirect to register page
         user = get_user_model().objects.filter(email=invitation.email).first()

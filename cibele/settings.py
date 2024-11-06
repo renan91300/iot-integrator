@@ -215,4 +215,4 @@ CELERY_RESULT_BACKEND = "rpc://"
 RUN_RABBITMQ_LISTENER = True
 
 DEFAULT_FROM_EMAIL = "renangomespoggian@gmail.com"
-FRONTEND_URL="http://localhost:3000/"
+FRONTEND_URL="http://localhost:3000"
