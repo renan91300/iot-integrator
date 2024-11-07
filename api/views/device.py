@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 import celery
 
 from api.models.device import DeviceModel
+from api.models.project import Project
 from api.serializers.device import DeviceSerializer
 from mqtt_listener import mqtt_listener
 
@@ -30,17 +31,14 @@ class DeviceViewSet(viewsets.ModelViewSet):
     serializer_class = DeviceSerializer
 
     def get_queryset(self):
-        queryset = self.queryset.filter(project__owner=self.request.user.id)
-        project = self.request.GET.get("project")
-        if project:
-            queryset = queryset.filter(project=project)
-
+        project_id = self.request.GET.get("project_id")
+        queryset = self.queryset.filter(project=project_id, project__members=self.request.user.id)
         return queryset
     
     def create(self, request, *args, **kwargs):
         project = request.GET.get("project")
         if not project:
-            return Response("É necessário informar o projeto")
+            return Response("É necessário informar o projeto", status=status.HTTP_400_BAD_REQUEST)
         data = request.data
         data["project"] = project
 
