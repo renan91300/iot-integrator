@@ -15,7 +15,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return ProjectSerializer
 
     def get_queryset(self):
-        return self.queryset.filter(owner=self.request.user.id)
+        return self.queryset.filter(members=self.request.user)
 
     def perform_create(self, serializer):
         # save the owner and add the owner to the members

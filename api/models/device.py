@@ -13,7 +13,7 @@ class DeviceModel(BaseModel):
     status = models.JSONField(verbose_name="Status")
     config = models.JSONField(verbose_name="Configuração do dispositivo")
     category = models.ForeignKey(
-        Category, on_delete=models.PROTECT, verbose_name="Categoria"
+        Category, on_delete=models.PROTECT, verbose_name="Categoria", related_name="devices"
     )
     received_data_config = models.JSONField(
         verbose_name="Configuração de dados recebidos"

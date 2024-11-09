@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-vru%a!#h)tgbgggbx6joxy#@j2@$b**2in+(4_!2ne0b=c)b8$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 AUTH_USER_MODEL = "accounts.UserAccount"
 
@@ -61,7 +61,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = ("http://localhost:5173",)
+CORS_ORIGIN_WHITELIST = ("http://localhost:5173", "http://127.0.0.1:5173",)
 ROOT_URLCONF = "cibele.urls"
 
 TEMPLATES = [
