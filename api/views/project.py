@@ -9,11 +9,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     permission_classes = [IsAuthenticated]
 
-    def get_serializer_class(self):
-        if self.action == 'create':
-            return ProjectCreateSerializer
-        return ProjectSerializer
-
     def get_queryset(self):
         return self.queryset.filter(members=self.request.user)
 

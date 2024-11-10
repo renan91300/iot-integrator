@@ -1,6 +1,6 @@
 from django.db import models
 from api.models.base import BaseModel
-
+from api.models.project import Project
 
 class LocationModel(BaseModel):
     """
@@ -10,6 +10,9 @@ class LocationModel(BaseModel):
     name = models.CharField(max_length=120)
     block = models.CharField(max_length=120)
     floor = models.PositiveSmallIntegerField()
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, related_name="locations"
+    )
 
     def __str__(self):
         return self.name
