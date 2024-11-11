@@ -36,7 +36,7 @@ class DeviceViewSet(viewsets.ModelViewSet):
         return queryset
     
     def create(self, request, *args, **kwargs):
-        project = request.GET.get("project")
+        project = request.GET.get("project_id")
         if not project:
             return Response("É necessário informar o projeto", status=status.HTTP_400_BAD_REQUEST)
         data = request.data
