@@ -8,30 +8,19 @@ class DeviceSerializer(serializers.ModelSerializer):
     status = serializers.JSONField()
     config = serializers.JSONField()
     received_data_config = serializers.JSONField()
-    location_id = serializers.PrimaryKeyRelatedField(
-        queryset=LocationModel.objects.all(), source="location", write_only=True
-    )
-    location_name = serializers.SlugRelatedField(
-        source="location", slug_field="name", read_only=True
-    )
-    category_id = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(), source="category", write_only=True
-    )
-    category_name = serializers.SlugRelatedField(
-        source="category", slug_field="name", read_only=True
-    )
-
+    location = serializers.SerializerMethodField()
+    category = serializers.SerializerMethodField()
+    
     class Meta:
         model = DeviceModel
-        fields = [
-            "id",
-            "name",
-            "status",
-            "config",
-            "received_data_config",
-            "location_id",
-            "location_name",
-            "category_id",
-            "category_name",
-            "project",
-        ]
+        fields = "__all__"
+
+    def get_location(self, obj):
+        if obj.location is None:
+            return {"id": "", "name": ""}
+        return {"id": obj.location.id, "name": obj.location.name}
+    
+    def get_category(self, obj):
+        if obj.category is None:
+            return {"id": "", "name": "", "base_settings": {}}
+        return {"id": obj.category.id, "name": obj.category.name, "base_settings": obj.category.base_settings}

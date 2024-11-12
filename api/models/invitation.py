@@ -6,7 +6,8 @@ from accounts.models import UserAccount
 
 class Invitation(BaseModel):
     email = models.EmailField()
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=255, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, related_name='invitations')
     invited_by = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
     token = models.CharField(max_length=64, unique=True, default=get_random_string(64))
