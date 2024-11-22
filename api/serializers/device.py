@@ -1,7 +1,5 @@
 from rest_framework import serializers
 from api.models.device import DeviceModel
-from api.models.location import LocationModel
-from api.models.category import Category
 
 
 class DeviceSerializer(serializers.ModelSerializer):
@@ -24,3 +22,9 @@ class DeviceSerializer(serializers.ModelSerializer):
         if obj.category is None:
             return {"id": "", "name": "", "base_settings": {}}
         return {"id": obj.category.id, "name": obj.category.name, "base_settings": obj.category.base_settings}
+    
+
+class PostDeviceSerializer(serializers.ModelSerializer):    
+    class Meta:
+        model = DeviceModel
+        fields = "__all__"

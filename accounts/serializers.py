@@ -28,7 +28,7 @@ class UserCreatePasswordRetypeSerializer(UserCreatePasswordRetypeSerializer):
     
     def validate_email(self, value):
         if not Invitation.objects.filter(email=value, accepted=False).exists():
-            raise ValidationError('No invitation found for this email')
+            raise ValidationError('Nenhum convite encontrado para esse email!')
         return value
 
     def perform_create(self, validated_data):
