@@ -13,16 +13,21 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from datetime import timedelta
 import os
 from pathlib import Path
+from environ import Env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Initialise environment variables
+env = Env()
+env.read_env()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-vru%a!#h)tgbgggbx6joxy#@j2@$b**2in+(4_!2ne0b=c)b8$"
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -89,22 +94,21 @@ WSGI_APPLICATION = "cibele.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "tcc",
-        "USER": "renan",
-        "PASSWORD": "12345",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": env("DATABASE_NAME"),
+        "USER": env("DATABASE_USER"),
+        "PASSWORD": env("DATABASE_PASS"),
+        "HOST": env("DATABASE_HOST"),
+        "PORT": env("DATABASE_PORT"),
     }
 }
 
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "renangomespoggian@gmail.com"
-EMAIL_HOST_PASSWORD = "vvlv lakw vpbi gbye"
-EMAIL_USE_TLS = True
-# "jzsbbmotvwnqcxvn"
+EMAIL_BACKEND = env("EMAIL_BACKEND")
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_PORT = env("EMAIL_PORT")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = env("EMAIL_USE_TLS") == "True"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -206,7 +210,7 @@ SWAGGER_SETTINGS = {
 }
 
 
-BROKER_URL = "amqp://guest:guest@localhost:15672//"
+BROKER_URL = env("BROKER_URL")
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
@@ -214,5 +218,5 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_BACKEND = "rpc://"
 RUN_RABBITMQ_LISTENER = True
 
-DEFAULT_FROM_EMAIL = "renangomespoggian@gmail.com"
-FRONTEND_URL="http://localhost:3000"
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
+FRONTEND_DOMAIN = env("FRONTEND_DOMAIN")

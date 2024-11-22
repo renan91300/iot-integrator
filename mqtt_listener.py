@@ -5,8 +5,12 @@ import threading
 import paho.mqtt.client as mqtt
 from api.models.device import DeviceModel
 from pymongo import MongoClient
+from environ import Env
 
-uri = "mongodb://localhost:27017/"
+env = Env()
+env.read_env()
+
+uri = env("MONGO_URI")
 mongoClient = MongoClient(uri)
 
 # display logging on console
@@ -20,8 +24,8 @@ class MqttListener(threading.Thread):
         self.running = True
 
     def connect(self):
-        self.client.username_pw_set("renan", "12345")
-        self.client.connect(host="localhost", port=1883, keepalive=60)
+        self.client.username_pw_set(env("MQTT_USER"), env("MQTT_PASS"))
+        self.client.connect(host=env("MQTT_HOST"), port=int(env("MQTT_PORT")), keepalive=60)
 
     def on_message(self, client, userdata, msg):
         data = json.loads(msg.payload)
@@ -32,7 +36,7 @@ class MqttListener(threading.Thread):
         device = msg.topic.split('/')[1]
         
         try:
-            database = mongoClient.get_database("tcc")
+            database = mongoClient.get_database(env("MONGO_DB"))
             collection = database.get_collection("received_data")
 
             collection.insert_one({

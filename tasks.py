@@ -73,7 +73,7 @@ import paho.mqtt.client as mqtt
 
 @shared_task
 def send_invitation_email(email, token, is_project_invitation=False):
-    invite_url = f"{settings.FRONTEND_URL}/register/{token}/"
+    invite_url = f"{settings.FRONTEND_DOMAIN}/register/{token}/"
     BaseEmailMessage(
         template_name="email/invitation_template.html",
         context={"is_project_invitation": is_project_invitation, "invite_url": invite_url}
